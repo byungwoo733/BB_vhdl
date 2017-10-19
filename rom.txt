@@ -1,0 +1,15 @@
+40  # LDI R0, 0xCE
+CE
+41  # LDI R1, 0x80
+80
+22  # LDA R2, R0
+00
+43  # LDI R3, 0x01
+01
+52  # ADD R2, R2, R3
+23
+31  # STA R1, R2
+20
+10  # HLT
+00
+41  # DB 'A'
