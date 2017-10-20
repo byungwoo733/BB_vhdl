@@ -29,7 +29,7 @@ begin
 					when "00010000" => L_CYCLE <= "00100000";
 					when "00100000" => L_CYCLE <= "01000000";
 					when "01000000" => L_CYCLE <= "10000000";
-					when others     => report "C7 overflowed in cycle_gen.RTL" severity failure;
+					when others     => report "C7 overflowed" severity failure;
 				end case;
 			end if;
 		end if;

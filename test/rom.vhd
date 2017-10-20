@@ -31,7 +31,6 @@ begin
 		variable V_LINE : line;
 		variable V_ADR  : natural := 0;
 		variable V_DAT  : std_logic_vector(XLEN - 1 downto 0);
-		variable V_SEP  : character;
 		variable V_DONE : std_logic := '0';
 	begin
 		if (V_DONE = '0') then

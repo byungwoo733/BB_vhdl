@@ -51,7 +51,7 @@ begin
 				L_IRDY <= '0';
 			end if;
 
-			if (L_STATE = "000") then
+			if (L_STATE = "000") then   -- Idle state
 				L_ADR  <= (others => 'Z');
 				L_DATO <= (others => 'Z');
 				L_DATI <= (others => 'Z');
@@ -64,21 +64,21 @@ begin
 					L_RW   <= '1';
 					L_MRDY <= '1';
 
-					L_STATE <= "000";
+					L_STATE <= "000";   -- Writes are finished in a single cycle
 				elsif (I_RE = '1' and L_MRDY = '0') then
-					L_ADR  <= I_MAR;
-					L_RW   <= '0';
+					L_ADR <= I_MAR;
+					L_RW  <= '0';
 
-					L_STATE <= "011";
+					L_STATE <= "011";   -- Read
 				elsif (L_IRDY = '0') then
 					L_ADR <= L_PC;
 					L_RW  <= '0';
 
-					L_STATE <= "001";
+					L_STATE <= "001";   -- Instruction fetch
 				end if;
 			elsif (L_STATE = "001") then
-				--if (I_MEMRDY = '1') then
-				L_IR(15 downto 8) <= I_DAT;
+				--if (I_MEMRDY = '1') then	-- Reads have data ready the next cycle, normally you would add a stall here
+				L_IR(15 downto 8) <= I_DAT; -- Store upper half of instruction
 				L_ADR             <= L_PC + X"01";
 				L_RW              <= '0';
 
@@ -86,14 +86,14 @@ begin
 				--end if;
 			elsif (L_STATE = "010") then
 				--if (I_MEMRDY = '1') then
-				L_IR(7 downto 0) <= I_DAT;
+				L_IR(7 downto 0) <= I_DAT; -- Store lower half of instruction
 				L_IRDY           <= '1';
 
 				L_STATE <= "000";
 				--end if;
 			elsif (L_STATE = "011") then
 				--if (I_MEMRDY = '1') then
-				L_DATI <= I_DAT;
+				L_DATI <= I_DAT;        -- Store read data
 				L_MRDY <= '1';
 
 				L_STATE <= "000";

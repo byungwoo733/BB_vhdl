@@ -59,7 +59,7 @@ begin
 	C_RST <= '1' when (
 		(C_CYCLE(0) = '1' and (D_TYPE(0) = '1' or D_TYPE(1) = '1')) -- NOP, HLT
 		or (C_CYCLE(2) = '1' and (D_TYPE(2) = '1' or D_TYPE(3) = '1' or D_TYPE(4) = '1')) -- LDA, STA, LDI
-		or (C_CYCLE(3) = '1' and (D_TYPE(5) = '1'))
+		or (C_CYCLE(3) = '1' and (D_TYPE(5) = '1')) -- ADD
 	) else '0';
 
 	L_CS(CS_RBUS'range) <= "1" when ((C_CYCLE(0) = '1' and (D_TYPE(2) = '1' or D_TYPE(3) = '1' or D_TYPE(5) = '1')) or (C_CYCLE(1) = '1' and (D_TYPE(3) = '1' or D_TYPE(5) = '1'))) else "0";

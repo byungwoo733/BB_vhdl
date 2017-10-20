@@ -192,9 +192,10 @@ begin
 			Q_MRDY  => B_MRDY
 		);
 
-	L_BUSX <= C_IMM when L_CS(CS_SBUS'range) = "1" else R_OUT;
-	L_CREG <= B_MDR when L_CS(CS_SBUS'range) = "1" else F_OUT;
+	L_BUSX <= C_IMM when L_CS(CS_SBUS'range) = "1" else R_OUT; -- Use bus select to decide between REG and IMM
+	L_CREG <= B_MDR when L_CS(CS_SBUS'range) = "1" else F_OUT; -- Use bus select to decide between ALU and MDR
 
+	-- Control signals
 	L_LCKA <= '1' when L_CS(CS_LCKA'range) = "1" else '0';
 	L_LCKB <= '1' when L_CS(CS_LCKB'range) = "1" else '0';
 	L_LCKC <= '1' when L_CS(CS_LCKC'range) = "1" else '0';

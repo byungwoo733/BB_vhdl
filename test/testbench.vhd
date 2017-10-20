@@ -73,12 +73,12 @@ begin
 			wait for CLOCK_PERIOD / 2;
 
 			if (L_RST = '1') then
-				L_RST <= '0';
+				L_RST <= '0';           -- The RST signal is enabled for one clock cycle
 			end if;
 		end loop clock_loop;
 	end process clock;
 
-	cpu : cpu_top
+	cpu_mod : cpu_top
 		port map(
 			I_CLK => L_CLK,
 			I_RST => L_RST,
@@ -99,7 +99,7 @@ begin
 
 	rom_mod : rom
 		generic map(
-			DATA_FILE => "rom.txt"
+			DATA_FILE => "rom.txt" -- Load ROM data from rom.txt
 		)
 		port map(
 			I_CLK => L_CLK,
@@ -114,9 +114,11 @@ begin
 			I_DAT => C_DATO
 		);
 
+		-- Select input data based on address range
 	C_DATI <= A_DAT when (C_ADR(7 downto 6) = "00" or C_ADR(7 downto 6) = "01") -- RAM
 		else O_DAT when (C_ADR(7 downto 6) = "11") -- ROM
 		else (others => '0');           -- IO
 
-	T_W <= '1' when C_ADR(7 downto 0) = X"80" else '0'; -- TTY
+	-- Write TTY when the address is TTY_ADDR
+	T_W <= '1' when C_ADR(7 downto 0) = TTY_ADDR else '0';
 end architecture RTL;

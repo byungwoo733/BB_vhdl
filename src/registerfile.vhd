@@ -227,7 +227,7 @@ begin
 			Q_D   => L_R15
 		);
 
-	with I_REG select L_WRITES <=
+	with I_REG select L_WRITES <=       -- Select write register
 		"0000000000000001" when "0000",
 		"0000000000000010" when "0001",
 		"0000000000000100" when "0010",
@@ -247,7 +247,7 @@ begin
 		"0000000000000000" when others;
 	L_WRITE <= L_WRITES when I_WE = '1' else (others => '0');
 
-	with I_REG select L_OUT <=
+	with I_REG select L_OUT <=          -- Select output
 		L_R0 when "0000",
 		L_R1 when "0001",
 		L_R2 when "0010",
@@ -263,7 +263,7 @@ begin
 		L_R12 when "1100",
 		L_R13 when "1101",
 		L_R14 when "1110",
-		L_R15 when "1111",
+		L_R15 when "1111",              --
 		(others => 'X') when others;
 
 	Q_OUT <= L_OUT when I_OE = '1' else (others => 'Z');
