@@ -30,26 +30,26 @@ architecture RTL of registerfile is
 		);
 	end component reg;
 
-	signal L_WRITE  : std_logic_vector(15 downto 0)       := X"0000";
-	signal L_WRITES : std_logic_vector(15 downto 0)       := X"0000";
-	signal L_R0     : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R1     : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R2     : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R3     : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R4     : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R5     : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R6     : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R7     : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R8     : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R9     : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R10    : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R11    : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R12    : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R13    : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R14    : std_logic_vector(XLEN - 1 downto 0) := X"00";
-	signal L_R15    : std_logic_vector(XLEN - 1 downto 0) := X"00";
+	signal L_WRITE  : std_logic_vector(15 downto 0);
+	signal L_WRITES : std_logic_vector(15 downto 0);
+	signal L_R0     : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R1     : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R2     : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R3     : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R4     : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R5     : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R6     : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R7     : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R8     : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R9     : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R10    : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R11    : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R12    : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R13    : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R14    : std_logic_vector(XLEN - 1 downto 0);
+	signal L_R15    : std_logic_vector(XLEN - 1 downto 0);
 
-	signal L_OUT : std_logic_vector(XLEN - 1 downto 0) := X"00";
+	signal L_OUT : std_logic_vector(XLEN - 1 downto 0);
 begin
 	r0 : reg
 		generic map(

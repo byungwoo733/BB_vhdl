@@ -12,9 +12,9 @@ entity reg is
 	);
 	port(
 		I_CLK : in  std_logic;
-		I_D   : in  std_logic_vector(width - 1 downto 0);
+		I_D   : in  std_logic_vector(WIDTH - 1 downto 0);
 		I_W   : in  std_logic;
-		Q_D   : out std_logic_vector(width - 1 downto 0)
+		Q_D   : out std_logic_vector(WIDTH - 1 downto 0)
 	);
 end entity reg;
 
