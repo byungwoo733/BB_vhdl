@@ -1,0 +1,54 @@
+40	# LDI R0, 0x80
+80
+41  # LDI R1, 'H'
+48
+30	# STA R0, R1
+10
+41  # LDI R1, 'E'
+45
+30	# STA R0, R1
+10
+41  # LDI R1, 'L'
+4C
+30	# STA R0, R1
+10
+30	# STA R0, R1
+10
+41  # LDI R1, 'O'
+4F
+30	# STA R0, R1
+10
+41  # LDI R1, ','
+2C
+30	# STA R0, R1
+10
+41  # LDI R1, ' '
+20
+30	# STA R0, R1
+10
+41  # LDI R1, 'W'
+57
+30	# STA R0, R1
+10
+41  # LDI R1, 'O'
+4F
+30	# STA R0, R1
+10
+41  # LDI R1, 'R'
+52
+30	# STA R0, R1
+10
+41  # LDI R1, 'L'
+4C
+30	# STA R0, R1
+10
+41  # LDI R1, 'D'
+44
+30	# STA R0, R1
+10
+41  # LDI R1, '!'
+21
+30	# STA R0, R1
+10
+10  # HLT
+00
