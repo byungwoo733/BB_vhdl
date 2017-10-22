@@ -61,13 +61,14 @@ architecture RTL of cpu_top is
 
 	component control_unit is
 		port(
-			I_CLK  : in  std_logic;
-			I_IRDY : in  std_logic;
-			I_MRDY : in  std_logic;
-			I_IR   : in  std_logic_vector(ILEN - 1 downto 0);
-			Q_CS   : out std_logic_vector(CS_SIZE - 1 downto 0);
-			Q_IMM  : out std_logic_vector(XLEN - 1 downto 0)
-		);
+            I_CLK  : in  std_logic;
+            I_RST  : in std_logic;
+            I_IRDY : in  std_logic;
+            I_MRDY : in  std_logic;
+            I_IR   : in  std_logic_vector(ILEN - 1 downto 0);
+            Q_CS   : out std_logic_vector(CS_SIZE - 1 downto 0);
+            Q_IMM  : out std_logic_vector(XLEN - 1 downto 0)
+        );
 	end component control_unit;
 
 	signal C_IMM : std_logic_vector(XLEN - 1 downto 0);
@@ -166,6 +167,7 @@ begin
 	cu : control_unit
 		port map(
 			I_CLK  => I_CLK,
+            I_RST  => I_RST,
 			I_IRDY => B_IRDY,
 			I_MRDY => B_MRDY,
 			I_IR   => L_IR,

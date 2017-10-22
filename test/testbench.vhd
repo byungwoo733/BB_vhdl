@@ -65,17 +65,15 @@ architecture RTL of testbench is
 begin
 	clock : process
 	begin
-		clock_loop : loop
 			L_CLK <= transport '0';
 			wait for CLOCK_PERIOD / 2;
-
+            
 			L_CLK <= transport '1';
 			wait for CLOCK_PERIOD / 2;
 
 			if (L_RST = '1') then
 				L_RST <= '0';           -- The RST signal is enabled for one clock cycle
 			end if;
-		end loop clock_loop;
 	end process clock;
 
 	cpu_mod : cpu_top

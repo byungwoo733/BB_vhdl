@@ -8,6 +8,7 @@ use work.constants.all;
 entity control_unit is
 	port(
 		I_CLK  : in  std_logic;
+        I_RST  : in std_logic;
 		I_IRDY : in  std_logic;
 		I_MRDY : in  std_logic;
 		I_IR   : in  std_logic_vector(ILEN - 1 downto 0);
@@ -56,11 +57,12 @@ begin
 		);
 
 	C_INC <= (I_IRDY and I_MRDY) when ((C_CYCLE(1) = '1' and D_TYPE(2) = '1') or (C_CYCLE(2) = '1' and D_TYPE(3) = '1')) else I_IRDY;
-	C_RST <= '1' when (
+	C_RST <= '1' when ((
 		(C_CYCLE(0) = '1' and (D_TYPE(0) = '1' or D_TYPE(1) = '1')) -- NOP, HLT
 		or (C_CYCLE(2) = '1' and (D_TYPE(2) = '1' or D_TYPE(3) = '1' or D_TYPE(4) = '1')) -- LDA, STA, LDI
 		or (C_CYCLE(3) = '1' and (D_TYPE(5) = '1')) -- ADD
-	) else '0';
+        ) or I_RST = '1'
+    ) else '0';
 
 	L_CS(CS_RBUS'range) <= "1" when ((C_CYCLE(0) = '1' and (D_TYPE(2) = '1' or D_TYPE(3) = '1' or D_TYPE(5) = '1')) or (C_CYCLE(1) = '1' and (D_TYPE(3) = '1' or D_TYPE(5) = '1'))) else "0";
 	L_CS(CS_BUSR'range) <= "1" when ((C_CYCLE(2) = '1' and (D_TYPE(2) = '1' or D_TYPE(4) = '1')) or (C_CYCLE(3) = '1' and D_TYPE(5) = '1')) else "0";
@@ -77,6 +79,6 @@ begin
 		else I_IR(11 downto 8) when ((C_CYCLE(0) = '1' and D_TYPE(3) = '1') or (C_CYCLE(2) = '1' and (D_TYPE(2) = '1' or D_TYPE(4) = '1')) or (C_CYCLE(3) = '1' and D_TYPE(5) = '1')) -- DEST
 		else "0000";
 
-	Q_CS  <= L_CS when I_IRDY = '1' else (others => '0');
+	Q_CS  <= L_CS when I_IRDY = '1' or I_RST = '1' else (others => '0');
 	Q_IMM <= I_IR(7 downto 0);
 end architecture RTL;
