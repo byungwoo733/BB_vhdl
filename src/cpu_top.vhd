@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
 
 library work;
 use work.constants.all;
@@ -61,14 +62,12 @@ architecture RTL of cpu_top is
 
 	component control_unit is
 		port(
-            I_CLK  : in  std_logic;
-            I_RST  : in std_logic;
-            I_IRDY : in  std_logic;
-            I_MRDY : in  std_logic;
-            I_IR   : in  std_logic_vector(ILEN - 1 downto 0);
-            Q_CS   : out std_logic_vector(CS_SIZE - 1 downto 0);
-            Q_IMM  : out std_logic_vector(XLEN - 1 downto 0)
-        );
+			I_CLK : in  std_logic;
+			I_RST : in  std_logic;
+			I_IR  : in  std_logic_vector(ILEN - 1 downto 0);
+			Q_CS  : out std_logic_vector(CS_SIZE - 1 downto 0);
+			Q_IMM : out std_logic_vector(XLEN - 1 downto 0)
+		);
 	end component control_unit;
 
 	signal C_IMM : std_logic_vector(XLEN - 1 downto 0);
@@ -93,24 +92,18 @@ architecture RTL of cpu_top is
 		);
 	end component bus_interface;
 
-	signal B_IRDY : std_logic;
-	signal B_MRDY : std_logic;
-	signal B_WE   : std_logic;
-	signal B_RE   : std_logic;
-	signal B_MDR  : std_logic_vector(XLEN - 1 downto 0);
-
 	signal L_IR : std_logic_vector(ILEN - 1 downto 0);
 
 	signal L_BUSX : std_logic_vector(XLEN - 1 downto 0);
 	signal L_BUSY : std_logic_vector(XLEN - 1 downto 0);
 
+	signal L_PC   : std_logic_vector(XLEN - 1 downto 0);
 	signal L_CS   : std_logic_vector(CS_SIZE - 1 downto 0);
 	signal L_LCKA : std_logic;
 	signal L_LCKB : std_logic;
 	signal L_LCKC : std_logic;
 	signal L_RBUS : std_logic;
 	signal L_BUSR : std_logic;
-	signal L_PCIN : std_logic;
 begin
 	reg_a : reg
 		generic map(
@@ -166,36 +159,36 @@ begin
 
 	cu : control_unit
 		port map(
-			I_CLK  => I_CLK,
-            I_RST  => I_RST,
-			I_IRDY => B_IRDY,
-			I_MRDY => B_MRDY,
-			I_IR   => L_IR,
-			Q_CS   => L_CS,
-			Q_IMM  => C_IMM
+			I_CLK => I_CLK,
+			I_RST => I_RST,
+			I_IR  => L_IR,
+			Q_CS  => L_CS,
+			Q_IMM => C_IMM
 		);
 
-	bi : bus_interface
-		port map(
-			I_CLK   => I_CLK,
-			I_RST   => I_RST,
-			I_INCPC => L_PCIN,
-			I_WE    => B_WE,
-			I_RE    => B_RE,
-			I_DAT   => I_DAT,
-			I_MAR   => F_A,
-			I_MDR   => F_B,
-			Q_ADR   => Q_ADR,
-			Q_DAT   => Q_DAT,
-			Q_MDR   => B_MDR,
-			Q_IR    => L_IR,
-			Q_RW    => Q_RW,
-			Q_IRDY  => B_IRDY,
-			Q_MRDY  => B_MRDY
-		);
+	process(I_CLK)
+	begin
+		if (rising_edge(I_CLK)) then
+			if (I_RST = '1') then
+				L_IR <= X"0000";
+				L_PC <= X"C0";
+			end if;
+
+			if (L_CS(CS_OPHL'range) = "1") then
+				L_IR(15 downto 8) <= I_DAT;
+			end if;
+			if (L_CS(CS_OPLL'range) = "1") then
+				L_IR(7 downto 0) <= I_DAT;
+			end if;
+
+			if (L_CS(CS_PCIN'range) = "1") then
+				L_PC <= L_PC + X"01";
+			end if;
+		end if;
+	end process;
 
 	L_BUSX <= C_IMM when L_CS(CS_SBUS'range) = "1" else R_OUT; -- Use bus select to decide between REG and IMM
-	L_CREG <= B_MDR when L_CS(CS_SBUS'range) = "1" else F_OUT; -- Use bus select to decide between ALU and MDR
+	L_CREG <= I_DAT when L_CS(CS_SBUS'range) = "1" else F_OUT; -- Use bus select to decide between ALU and MDR
 
 	-- Control signals
 	L_LCKA <= '1' when L_CS(CS_LCKA'range) = "1" else '0';
@@ -204,10 +197,9 @@ begin
 	L_RBUS <= '1' when L_CS(CS_RBUS'range) = "1" else '0';
 	L_BUSR <= '1' when L_CS(CS_BUSR'range) = "1" else '0';
 
-	L_PCIN <= '1' when L_CS(CS_PCIN'range) = "1" else '0';
-
 	F_FC <= '1' when L_CS(CS_ALUF'range) = "1" else '0';
 
-	B_WE <= '1' when L_CS(CS_MEMW'range) = "1" else '0';
-	B_RE <= '1' when L_CS(CS_MEMR'range) = "1" else '0';
+	Q_ADR <= L_PC when L_CS(CS_PCEN'range) = "1" else F_A;
+	Q_DAT <= F_B;
+	Q_RW  <= '1' when L_CS(CS_MEMW'range) = "1" else '0';
 end architecture RTL;

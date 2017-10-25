@@ -60,20 +60,20 @@ architecture RTL of testbench is
 
 	signal T_W : std_logic;
 
-	signal L_CLK : std_logic;
+	signal L_CLK : std_logic := '0';
 	signal L_RST : std_logic := '1';
 begin
 	clock : process
 	begin
-			L_CLK <= transport '0';
-			wait for CLOCK_PERIOD / 2;
-            
-			L_CLK <= transport '1';
-			wait for CLOCK_PERIOD / 2;
+		L_CLK <= transport '1';
+		wait for CLOCK_PERIOD / 2;
 
-			if (L_RST = '1') then
-				L_RST <= '0';           -- The RST signal is enabled for one clock cycle
-			end if;
+		L_CLK <= transport '0';
+		wait for CLOCK_PERIOD / 2;
+
+		if (L_RST = '1') then
+			L_RST <= '0';               -- The RST signal is enabled for one clock cycle
+		end if;
 	end process clock;
 
 	cpu_mod : cpu_top
@@ -97,7 +97,7 @@ begin
 
 	rom_mod : rom
 		generic map(
-			DATA_FILE => "rom.txt" -- Load ROM data from rom.txt
+			DATA_FILE => "rom.txt"      -- Load ROM data from rom.txt
 		)
 		port map(
 			I_CLK => L_CLK,
@@ -118,5 +118,5 @@ begin
 		else (others => '0');           -- IO
 
 	-- Write TTY when the address is TTY_ADDR
-	T_W <= '1' when C_ADR(7 downto 0) = TTY_ADDR else '0';
+	T_W <= '1' when C_ADR(7 downto 0) = TTY_ADDR and C_RW = '1' else '0';
 end architecture RTL;

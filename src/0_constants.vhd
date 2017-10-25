@@ -24,8 +24,11 @@ package constants is
 	constant CS_MEMR : std_logic_vector(7 downto 7)   := (others => 'X'); -- Read from memory
 	constant CS_MEMW : std_logic_vector(8 downto 8)   := (others => 'X'); -- Write to memory
 	constant CS_PCIN : std_logic_vector(9 downto 9)   := (others => 'X'); -- Increment PC
-	constant CS_SREG : std_logic_vector(13 downto 10) := (others => 'X'); -- Register select
-	constant CS_SIZE : integer                        := 14;
+	constant CS_PCEN : std_logic_vector(10 downto 10) := (others => 'X'); -- Use PC as MAR
+	constant CS_OPLL : std_logic_vector(11 downto 11) := (others => 'X'); -- Load lower instruction byte
+	constant CS_OPHL : std_logic_vector(12 downto 12) := (others => 'X'); -- Load upper instruction byte
+	constant CS_SREG : std_logic_vector(16 downto 13) := (others => 'X'); -- Register select
+	constant CS_SIZE : integer                        := 17;
 
 	function CONV_CHAR(SLV8 : std_logic_vector (7 downto 0)) return CHARACTER; -- Utility function for TTY
 end package constants;
@@ -45,4 +48,5 @@ package body constants is
 		end loop;
 		return CHARACTER'VAL(TEMP);
 	end CONV_CHAR;
+
 end package body constants;
