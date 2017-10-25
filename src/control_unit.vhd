@@ -9,8 +9,6 @@ entity control_unit is
 	port(
 		I_CLK : in  std_logic;
 		I_RST : in  std_logic;
-		--	I_IRDY : in  std_logic;
-		--	I_MRDY : in  std_logic;
 		I_IR  : in  std_logic_vector(ILEN - 1 downto 0);
 		Q_CS  : out std_logic_vector(CS_SIZE - 1 downto 0);
 		Q_IMM : out std_logic_vector(XLEN - 1 downto 0)
@@ -110,5 +108,5 @@ begin
 		else "0000";
 
 	Q_CS  <= L_CS when I_RST = '0' and D_TYPE(1) = '0' else (others => '0');
-	Q_IMM <= I_IR(7 downto 0);
+	Q_IMM <= L_IR(7 downto 0);
 end architecture RTL;
