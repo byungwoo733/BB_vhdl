@@ -26,12 +26,16 @@ architecture RTL of testbench is
 	signal C_DATI : std_logic_vector(XLEN - 1 downto 0);
 
 	component ram is
+		generic(
+			ADR_BITS : natural := 7;
+			DATA_LEN : natural := 8
+		);
 		port(
 			I_CLK : in  std_logic;
 			I_RW  : in  std_logic;
-			I_ADR : in  std_logic_vector(RAM_BITS - 1 downto 0);
-			I_DAT : in  std_logic_vector(XLEN - 1 downto 0);
-			Q_DAT : out std_logic_vector(XLEN - 1 downto 0)
+			I_ADR : in  std_logic_vector(ADR_BITS - 1 downto 0);
+			I_DAT : in  std_logic_vector(DATA_LEN - 1 downto 0);
+			Q_DAT : out std_logic_vector(DATA_LEN - 1 downto 0)
 		);
 	end component ram;
 
@@ -39,12 +43,14 @@ architecture RTL of testbench is
 
 	component rom is
 		generic(
-			DATA_FILE : string
+			DATA_FILE : string;
+			ADR_BITS : natural := 6;
+			DATA_LEN : natural := 8
 		);
 		port(
 			I_CLK : in  std_logic;
-			I_ADR : in  std_logic_vector(ROM_BITS - 1 downto 0);
-			Q_DAT : out std_logic_vector(XLEN - 1 downto 0)
+			I_ADR : in  std_logic_vector(ADR_BITS - 1 downto 0);
+			Q_DAT : out std_logic_vector(DATA_LEN - 1 downto 0)
 		);
 	end component rom;
 
@@ -87,6 +93,10 @@ begin
 		);
 
 	ram_mod : ram
+		generic map(
+			ADR_BITS => RAM_BITS,
+			DATA_LEN => XLEN
+		)
 		port map(
 			I_CLK => L_CLK,
 			I_RW  => C_RW,
@@ -97,7 +107,9 @@ begin
 
 	rom_mod : rom
 		generic map(
-			DATA_FILE => "rom.txt"      -- Load ROM data from rom.txt
+			DATA_FILE => "rom.txt",      -- Load ROM data from rom.txt
+			ADR_BITS => ROM_BITS,
+			DATA_LEN => XLEN
 		)
 		port map(
 			I_CLK => L_CLK,
