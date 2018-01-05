@@ -39,6 +39,7 @@ architecture RTL of testbench is
 		);
 	end component ram;
 
+	signal A_RW  : std_logic;
 	signal A_DAT : std_logic_vector(XLEN - 1 downto 0);
 
 	component rom is
@@ -99,7 +100,7 @@ begin
 		)
 		port map(
 			I_CLK => L_CLK,
-			I_RW  => C_RW,
+			I_RW  => A_RW,
 			I_ADR => C_ADR(RAM_BITS - 1 downto 0),
 			I_DAT => C_DATO,
 			Q_DAT => A_DAT
@@ -107,7 +108,7 @@ begin
 
 	rom_mod : rom
 		generic map(
-			DATA_FILE => "rom.txt",      -- Load ROM data from rom.txt
+			DATA_FILE => "rom_helloworld.txt",      -- Load ROM data
 			ADR_BITS => ROM_BITS,
 			DATA_LEN => XLEN
 		)
@@ -125,10 +126,13 @@ begin
 		);
 
 		-- Select input data based on address range
-	C_DATI <= A_DAT when (C_ADR(7 downto 6) = "00" or C_ADR(7 downto 6) = "01") -- RAM
+	C_DATI <= A_DAT when (C_ADR(7) = '0') -- RAM
 		else O_DAT when (C_ADR(7 downto 6) = "11") -- ROM
 		else (others => '0');           -- IO
 
 	-- Write TTY when the address is TTY_ADDR
 	T_W <= '1' when C_ADR(7 downto 0) = TTY_ADDR and C_RW = '1' else '0';
+	
+	-- Read/Write RAM when the address is within the 0xxxxxxx range (0x00 - 0x7f)
+	A_RW <= C_RW when (C_ADR(7) = '0') else '0';
 end architecture RTL;

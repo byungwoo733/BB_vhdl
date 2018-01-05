@@ -72,26 +72,6 @@ architecture RTL of cpu_top is
 
 	signal C_IMM : std_logic_vector(XLEN - 1 downto 0);
 
-	component bus_interface is
-		port(
-			I_CLK   : in  std_logic;
-			I_RST   : in  std_logic;
-			I_INCPC : in  std_logic;
-			I_RE    : in  std_logic;
-			I_WE    : in  std_logic;
-			I_DAT   : in  std_logic_vector(XLEN - 1 downto 0);
-			I_MAR   : in  std_logic_vector(XLEN - 1 downto 0);
-			I_MDR   : in  std_logic_vector(XLEN - 1 downto 0);
-			Q_ADR   : out std_logic_vector(XLEN - 1 downto 0);
-			Q_DAT   : out std_logic_vector(XLEN - 1 downto 0);
-			Q_MDR   : out std_logic_vector(XLEN - 1 downto 0);
-			Q_IR    : out std_logic_vector(ILEN - 1 downto 0);
-			Q_RW    : out std_logic;
-			Q_IRDY  : out std_logic;
-			Q_MRDY  : out std_logic
-		);
-	end component bus_interface;
-
 	signal L_IR : std_logic_vector(ILEN - 1 downto 0);
 
 	signal L_BUSX : std_logic_vector(XLEN - 1 downto 0);
